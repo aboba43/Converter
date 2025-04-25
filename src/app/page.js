@@ -2,7 +2,7 @@
 
 import "./globals.css";
 import { useState } from "react";
-import {colors} from "@mui/material";
+import TodoList from "@/app/components/TodoList";
 
 export default function Home() {
     const [todos, setTodos] = useState([]);
@@ -28,8 +28,6 @@ export default function Home() {
 
         )
     }
-
-    
     const addTodo = () => {
         if (text.trim().length) {
             setTodos([
@@ -50,16 +48,9 @@ export default function Home() {
                 <input value={text} onChange={e => setText(e.target.value)} />
                 <button onClick={addTodo}>Add Todo</button>
             </label>
-            <ul>
-                {
-                    todos.map(todo => <li key={todo.id}>
-                        <input type="checkbox" checked={todo.completed} onClick={() => check(todo.id)}/>
-                        <span>{todo.text}</span>
-                        <span className={"delete"} onClick={() => removeTodo(todo.id)} >&times;</span>
-                    </li>)
-
-                }
-            </ul>
+            <TodoList todoes={todos}
+            removeTodo = {removeTodo}
+            check={check}/>
         </>
     );
 }

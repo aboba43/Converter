@@ -10,7 +10,11 @@ html, body{
 .delete{
   color: red;
   cursor: pointer;
+
 }
 li{
   list-style: none;
+}
+input:checked + span{
+  text-decoration: line-through;
 }
