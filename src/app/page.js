@@ -1,36 +1,65 @@
 'use client'
 
 import "./globals.css";
-import Header from "@/app/Header/Header";
-import Sidebar from "@/app/Sidebar/Sidebar";
-import Main from "@/app/Main/Main";
 import { useState } from "react";
+import {colors} from "@mui/material";
 
 export default function Home() {
-    const [activeFilters, setActiveFilters] = useState({
-        type: [],
-        year: [],
-        make: []
-    });
+    const [todos, setTodos] = useState([]);
+    const [text, setText] = useState("");
+    const removeTodo = (todoId) =>{
+        setTodos(todos.filter(todo => todo.id !== todoId))
+    }
+    const check = (todoId) => {
+        setTodos(
+            todos.map(
+                todo => {
+                    if (todo.id !== todoId) return todo;
 
-    const handleFilterChange = (filterType, value, isChecked) => {
-        setActiveFilters(prev => ({
-            ...prev,
-            [filterType]: isChecked 
-                ? [...prev[filterType], value]
-                : prev[filterType].filter(item => item !== value)
-        }));
+
+                    return {
+                        ...todo,
+                        completed: !todo.completed,
+
+                    }
+                }
+            )
+
+
+        )
+    }
+
+    
+    const addTodo = () => {
+        if (text.trim().length) {
+            setTodos([
+                ...todos,
+                {
+                    id: new Date().toISOString(),
+                    text,
+                    completed: false,
+                }
+            ]);
+            setText("");
+        }
     };
 
     return (
         <>
-            <Header />
-            <div className="main">
-                <Sidebar onFilterChange={handleFilterChange} activeFilters={activeFilters} />
-                <Main filters={activeFilters} />
-            </div>
+            <label>
+                <input value={text} onChange={e => setText(e.target.value)} />
+                <button onClick={addTodo}>Add Todo</button>
+            </label>
+            <ul>
+                {
+                    todos.map(todo => <li key={todo.id}>
+                        <input type="checkbox" checked={todo.completed} onClick={() => check(todo.id)}/>
+                        <span>{todo.text}</span>
+                        <span className={"delete"} onClick={() => removeTodo(todo.id)} >&times;</span>
+                    </li>)
+
+                }
+            </ul>
         </>
     );
 }
-
-
