@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import SelectValue from "@/app/Select/SelectValue";
 import './style.css'
-import { Input } from '@mui/material';
-import { Typography } from '@mui/material';
+import { Input, Typography, Button } from '@mui/material';
 
 export default function Converter() {
     const [invalue, setInvalue] = useState('');
@@ -15,8 +14,8 @@ export default function Converter() {
 
 
     useEffect(() => {
-        setOutvalue((invalue/selectedCode*selectedCode2).toFixed(2));
-    }, [invalue]);
+        setOutvalue(((invalue / selectedCode) * selectedCode2).toFixed(2));
+    }, [invalue, selectedCode, selectedCode2]);
 
     useEffect(() => {
         fetch("https://api.currencyapi.com/v3/latest?apikey=cur_live_nW3rH7qt6AwnOk7Enttm8cu2hDR5Cwxj2ipDaWaN")
@@ -33,7 +32,11 @@ export default function Converter() {
             );
         console.log("rerender")
     }, []);
-
+    const swapCurrencies = () => {
+        const temp = selectedCode;
+        setSelectedCode(selectedCode2);
+        setSelectedCode2(temp);
+    };
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -50,6 +53,9 @@ export default function Converter() {
                     <SelectValue items={items}
                             value={selectedCode}
                             onChange={(e) => setSelectedCode(e.target.value)} /></div>
+                <div className="button-container" style={{ textAlign: "center", margin: "1rem" }}>
+                    <Button variant="outlined" onClick={swapCurrencies}>⇅ Replace</Button>
+                </div>
                 <div className={"out"}>
                     <Typography variant={"h6"}>Outnput</Typography>
 
