@@ -1,0 +1,10 @@
+.converter {
+    display: flex;
+    justify-content: space-around;
+
+}
+Input{
+    border: 0;
+    height: 30px;
+    font-size: 30px;
+}
