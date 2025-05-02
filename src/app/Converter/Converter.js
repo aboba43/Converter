@@ -24,7 +24,9 @@ export default function Converter() {
                 (result) => {
                     setIsLoaded(true);
                     setItems(result);
-                },
+                    setSelectedCode(result.data["UAH"].value);
+                    setSelectedCode2(result.data["EUR"].value);
+                    },
                 (error) => {
                     setIsLoaded(true);
                     setError(error);
