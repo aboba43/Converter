@@ -1,13 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { Typography, List, ListItem, ListItemText, useTheme, useMediaQuery } from '@mui/material';
+import { Typography, List, ListItem, ListItemText } from '@mui/material';
 import './style.css';
 
 export default function History() {
     const [history, setHistory] = useState([]);
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         const loadHistory = () => {
@@ -31,11 +29,11 @@ export default function History() {
     return (
         <div className="history-container">
             <Typography 
-                variant={isMobile ? "h6" : "h5"} 
+                variant="h6" 
                 gutterBottom
                 sx={{ 
-                    textAlign: isMobile ? 'center' : 'left',
-                    mb: isMobile ? 1 : 2
+                    textAlign: 'center',
+                    mb: 1
                 }}
             >
                 Conversion History
@@ -47,17 +45,17 @@ export default function History() {
                             key={index} 
                             divider
                             sx={{
-                                py: isMobile ? 1 : 1.5
+                                py: 1
                             }}
                         >
                             <ListItemText
                                 primary={`${item.inputValue} ${item.fromCurrency} → ${item.outputValue} ${item.toCurrency}`}
                                 secondary={item.timestamp}
                                 primaryTypographyProps={{
-                                    fontSize: isMobile ? '0.9rem' : '1rem'
+                                    fontSize: '0.9rem'
                                 }}
                                 secondaryTypographyProps={{
-                                    fontSize: isMobile ? '0.8rem' : '0.875rem'
+                                    fontSize: '0.8rem'
                                 }}
                             />
                         </ListItem>
