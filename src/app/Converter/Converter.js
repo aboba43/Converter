@@ -12,7 +12,6 @@ export default function Converter() {
     const [selectedCode, setSelectedCode] = useState(1);
     const [selectedCode2, setSelectedCode2] = useState(1);
 
-
     useEffect(() => {
         setOutvalue(((invalue / selectedCode) * selectedCode2).toFixed(2));
     }, [invalue, selectedCode, selectedCode2]);
@@ -26,19 +25,34 @@ export default function Converter() {
                     setItems(result);
                     setSelectedCode(result.data["UAH"].value);
                     setSelectedCode2(result.data["EUR"].value);
-                    },
+                },
                 (error) => {
                     setIsLoaded(true);
                     setError(error);
                 }
             );
-        console.log("rerender")
     }, []);
+
     const swapCurrencies = () => {
         const temp = selectedCode;
         setSelectedCode(selectedCode2);
         setSelectedCode2(temp);
     };
+
+    const saveToLocalStorage = () => {
+        const savedData = {
+            inputValue: invalue,
+            outputValue: outvalue,
+            fromCurrency: Object.keys(items.data).find(key => items.data[key].value === selectedCode),
+            toCurrency: Object.keys(items.data).find(key => items.data[key].value === selectedCode2),
+            timestamp: new Date().toLocaleString()
+        };
+        const existingHistory = JSON.parse(localStorage.getItem('converterHistory')) || [];
+        const updatedHistory = Array.isArray(existingHistory) ? [savedData, ...existingHistory] : [savedData];
+        localStorage.setItem('converterHistory', JSON.stringify(updatedHistory));
+        window.dispatchEvent(new Event('storage'));
+    };
+
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -57,17 +71,15 @@ export default function Converter() {
                             onChange={(e) => setSelectedCode(e.target.value)} /></div>
                 <div className="button-container" style={{ textAlign: "center", margin: "1rem" }}>
                     <Button variant="outlined" onClick={swapCurrencies}>⇅ Replace</Button>
+                    <Button variant="outlined" onClick={saveToLocalStorage} style={{ marginLeft: "10px" }}>Save to History</Button>
                 </div>
                 <div className={"out"}>
-                    <Typography variant={"h6"}>Outnput</Typography>
-
+                    <Typography variant={"h6"}>Output</Typography>
                     <Input value={outvalue} readOnly={true} placeholder={"0.00"}/>
                     <SelectValue items={items}
                             value={selectedCode2}
                             onChange={(e) => setSelectedCode2(e.target.value)} />
-
                 </div>
-
             </div>
         );
     }
